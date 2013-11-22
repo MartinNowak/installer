@@ -61,7 +61,10 @@ else
 		ferror "dmd v2.063 and newer only" "Exiting..."
 	fi
 fi
-
+if test "${VER:5:2}" != ""; then
+    RELEASE=${VER:6:1}
+    VER=${VER:0:5}
+fi
 
 # check model parameter
 if test $# -eq 1 ;then
@@ -95,10 +98,14 @@ if [ $E -eq 1 ]; then
 fi
 
 MAINTAINER="Martin Nowak <code@dawg.eu>"
-VERSION=${1:2}
+# example (2.064.2): VER=2.064, RELEASE=2
+# dlang uses 2.064 for the first release (instead of 2.064.0) :(
 if [ "$RELEASE" == "" ]
 then
+    DVER=${VER}
     RELEASE=0
+else
+    DVER=${VER}.${RELEASE}
 fi
 DESTDIR=`pwd`
 if test "$2" = "-m64" ;then
@@ -121,18 +128,18 @@ PROJECTS="dmd druntime phobos tools"
 
 cat > ${SPECFILE} <<EOF
 Name: dmd
-Version: ${VERSION}
+Version: ${VER}
 Release: ${RELEASE}
 Summary: Digital Mars D Compiler
 
 Group: Development/Languages
 License: see /usr/share/doc/dmd
 URL: http://dlang.org/
-Source0: https://github.com/D-Programming-Language/dmd/archive/v%{version}/dmd-%{version}.tar.gz
-Source1: https://github.com/D-Programming-Language/druntime/archive/v%{version}/druntime-%{version}.tar.gz
-Source2: https://github.com/D-Programming-Language/phobos/archive/v%{version}/phobos-%{version}.tar.gz
-Source3: https://github.com/D-Programming-Language/tools/archive/v%{version}/tools-%{version}.tar.gz
-Source4: https://github.com/D-Programming-Language/installer/archive/v%{version}/installer-%{version}.tar.gz
+Source0: https://github.com/D-Programming-Language/dmd/archive/v${DVER}/dmd-${VER}.${RELEASE}.tar.gz
+Source1: https://github.com/D-Programming-Language/druntime/archive/v${DVER}/druntime-${VER}.${RELEASE}.tar.gz
+Source2: https://github.com/D-Programming-Language/phobos/archive/v${DVER}/phobos-${VER}.${RELEASE}.tar.gz
+Source3: https://github.com/D-Programming-Language/tools/archive/v${DVER}/tools-${VER}.${RELEASE}.tar.gz
+Source4: https://github.com/D-Programming-Language/installer/archive/v${DVER}/installer-${VER}.${RELEASE}.tar.gz
 Packager: Martin Nowak <code@dawg.eu>
 
 ExclusiveArch: ${ARCH}
@@ -168,7 +175,7 @@ Main designer: Walter Bright
 
 # unversioned symlinks
 for proj in dmd druntime phobos tools installer; do
-     ln -s \${proj}-${VERSION} \${proj}
+     ln -s \${proj}-${DVER} \${proj}
 done
 
 
@@ -181,7 +188,7 @@ DFLAGS=-I%@P%/../../druntime/import -I%@P%/../../phobos -L-L%@P%/../../phobos/ge
 " > dmd/src/dmd.conf
 
 # 2.064.2 came with an outdated VERSION file
-echo %{version} > dmd/VERSION
+echo ${DVER} > dmd/VERSION
 
 for proj in dmd druntime phobos; do
     pushd \${proj}
@@ -215,7 +222,7 @@ install -Dm644 install/{dmd-artistic.txt,dmd-backendlicense.txt,druntime-LICENSE
 LIBPHOBOS=phobos/generated/linux/release/${MODEL}/libphobos2
 install -Dm755 \${LIBPHOBOS}.a %{buildroot}%{_libdir}
 ## @@ BUG @@ ## phobos/posix.mak doesn't use point releases
-# install -Dm755 \${LIBPHOBOS}.so.${VER:2:1}.${VER:3:4} %{buildroot}%{_libdir} # libphobos2.so.0.64.2
+# install -Dm755 \${LIBPHOBOS}.so.${VER:2:1}.${VER:3:2}.${RELEASE} %{buildroot}%{_libdir} # libphobos2.so.0.64.2
 install -Dm755 \${LIBPHOBOS}.so.${VER:2:1}.${VER:3:2}.0 %{buildroot}%{_libdir} # libphobos2.so.0.64.0
 # copy symlinks
 cp -P \${LIBPHOBOS}.so %{buildroot}%{_libdir}
