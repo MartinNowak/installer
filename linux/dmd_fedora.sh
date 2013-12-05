@@ -236,6 +236,13 @@ echo "
 DFLAGS=-I%{_includedir}/dmd -L-L%{_libdir} -L--export-dynamic
 " > %{buildroot}%{_sysconfdir}/dmd.conf
 
+%clean
+
+for proj in dmd druntime phobos tools; do
+    make -C \${proj} -f posix.mak clean
+done
+rm -rf install
+
 %post
 
 /sbin/ldconfig
@@ -260,4 +267,4 @@ DFLAGS=-I%{_includedir}/dmd -L-L%{_libdir} -L--export-dynamic
 EOF
 
 ${DRY} spectool -R -g ${SPECFILE}
-${DRY} rpmbuild --noclean -ba ${SPECFILE}
+${DRY} rpmbuild -ba ${SPECFILE}
