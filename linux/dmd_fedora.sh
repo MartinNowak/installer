@@ -143,9 +143,9 @@ Source4: https://github.com/D-Programming-Language/installer/archive/v${DVER}/in
 Packager: Martin Nowak <code@dawg.eu>
 
 ExclusiveArch: ${ARCH}
-Requires: glibc-devel(${FARCH}), gcc(${FARCH}), libcurl(${FARCH}), xdg-utils
+Requires: glibc-devel(${FARCH}), gcc, libcurl(${FARCH}), xdg-utils
 BuildRequires: libcurl-devel(${FARCH})
-Provides: dmd = ${VERSION}-${RELEASE}, dmd(${FARCH}) = ${VERSION}-${RELEASE}
+Provides: dmd = ${VER}.${RELEASE}, dmd(${FARCH}) = ${VER}.${RELEASE}
 
 %description
 D is a systems programming language. Its focus is on combining the power and
@@ -267,4 +267,4 @@ rm -rf install
 EOF
 
 ${DRY} spectool -R -g ${SPECFILE}
-${DRY} rpmbuild -ba ${SPECFILE}
+${DRY} rpmbuild --target=${ARCH} -ba ${SPECFILE}
