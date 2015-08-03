@@ -268,6 +268,10 @@ SectionGroup /e "D2"
   Section "Detect MSVC" DetectMSVC
     ClearErrors
 
+    ReadRegStr $0 HKLM "Software\Microsoft\VisualStudio\14.0\Setup\VC" "ProductDir"
+    StrCpy $1 ";VC2015 "
+    IfErrors 0 write_vc_path
+    ClearErrors
     ReadRegStr $0 HKLM "Software\Microsoft\VisualStudio\12.0\Setup\VC" "ProductDir"
     StrCpy $1 ";VC2013 "
     IfErrors 0 write_vc_path
@@ -290,12 +294,15 @@ SectionGroup /e "D2"
     goto finish_vc_path
 
     no_vc_detected:
-    MessageBox MB_OK "Could not detect Visual Studio (2008-2013 are supported). Using defaults."
+    MessageBox MB_OK "Could not detect Visual Studio (2008-2015 are supported). Using defaults."
 
 
     finish_vc_path:
     ClearErrors
 
+    ReadRegStr $0 HKLM "Software\Microsoft\Windows Kits\Installed Roots" "KitsRoot10"
+    IfErrors 0 write_sdk_path
+    ClearErrors
     ReadRegStr $0 HKLM "Software\Microsoft\Windows Kits\Installed Roots" "KitsRoot81"
     IfErrors 0 write_sdk_path
     ClearErrors
@@ -316,7 +323,7 @@ SectionGroup /e "D2"
     goto finish_sdk_path
 
     no_sdk_detected:
-    MessageBox MB_OK "Could not detect Windows SDK (6.0A-8.1 are supported). Using defaults."
+    MessageBox MB_OK "Could not detect Windows SDK (6.0A-10.0 are supported). Using defaults."
 
 
     finish_sdk_path:
