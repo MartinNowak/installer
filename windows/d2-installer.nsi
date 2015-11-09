@@ -539,11 +539,9 @@ Section "Uninstall"
   Delete "$SMPROGRAMS\D\D2 64-bit Command Prompt.lnk"
   RMDir "$SMPROGRAMS\D"
 
-  ${GetOptions} $CMDLINE "/S" $R0
-  IfErrors 0 rmdir
   MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION \
   "The uninstaller will now recursively delete ALL files and directories under '$INSTDIR\dmd2'. Continue?" \
-  /SD IDOK IDOK rmdir
+  IDOK rmdir
   Abort
 
   rmdir:
