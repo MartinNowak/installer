@@ -111,7 +111,7 @@ struct Box
     void scp(string src, string tgt)
     {
         if (os == OS.windows)
-            run("scp -rq -F "~sshcfg~" "~src~" "~tgt);
+            run("scp -r -F "~sshcfg~" "~src~" "~tgt);
         else
             run("rsync -a -e 'ssh -F "~sshcfg~"' "~src~" "~tgt);
     }
