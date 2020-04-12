@@ -18,10 +18,10 @@ RPM="dmd-${VERSION/-/\~}-0.fedora.x86_64.rpm"
 # dmd-2.079.1-0.openSUSE.x86_64.rpm, dmd-2.079.1~beta.1-0.openSUSE.x86_64.rpm
 SUSE_RPM="dmd-${VERSION/-/\~}-0.openSUSE.x86_64.rpm"
 
-DEB_PLATFORMS=(ubuntu:precise ubuntu:trusty ubuntu:xenial ubuntu:bionic)
+DEB_PLATFORMS=(ubuntu:xenial ubuntu:bionic)
 DEB_PLATFORMS+=(debian:jessie debian:stretch debian:buster)
-RPM_PLATFORMS=(fedora:27 fedora:28 fedora:29 centos:6 centos:7)
-SUSE_RPM_PLATFORMS=(opensuse:leap opensuse/tumbleweed)
+RPM_PLATFORMS=(fedora:30 fedora:31 centos:7 centos:8)
+SUSE_RPM_PLATFORMS=(opensuse/leap opensuse/tumbleweed)
 
 # copy pkgs to test folder so that it's part of docker's build context
 cp "$BUILD_DIR/$DEB" .
@@ -89,6 +89,10 @@ trap 'echo -e "\e[1;31mInner script failed at line \$LINENO.\e[0m"' ERR
 set -x
 
 yum install curl --quiet --assumeyes
+# replace x86-64 only libcurl-minimal w/ libcurl to resolve libcurl(x86-32) dependency
+if rpm --query libcurl-minimal --quiet; then
+  yum install libcurl --quiet --allowerasing --assumeyes
+fi
 yum localinstall $RPM --quiet --assumeyes
 curl --version >/dev/null
 # run a complex D hello world (using libcurl)
