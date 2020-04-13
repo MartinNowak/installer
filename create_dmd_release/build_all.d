@@ -28,9 +28,9 @@ enum freebsd_32 = Platform(OS.freebsd, Model._32);
 enum freebsd_64 = Platform(OS.freebsd, Model._64);
 
 /// Name: create_dmd_release-linux
-/// VagrantBox.es: Opscode debian-7.4
-/// URL: http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_debian-7.4_chef-provisionerless.box
-/// Setup: echo 'deb http://deb.debian.org/debian wheezy-backports main' | sudo tee -a /etc/apt/sources.list; sudo dpkg --add-architecture i386; sudo apt-get -y update; sudo apt-get -y -t wheezy-backports install git g++-multilib dpkg-dev rpm rsync unzip libcurl3 libcurl3:i386 --no-install-recommends; sudo apt-get clean
+/// https://app.vagrantup.com/debian/boxes/stretch64
+/// URL: https://vagrantcloud.com/debian/boxes/stretch64/versions/9.12.0/providers/virtualbox.box
+/// Setup: sudo dpkg --add-architecture i386; sudo apt-get -y update; sudo apt-get -y install git g++-multilib dpkg-dev rpm rsync unzip libcurl3 libcurl3:i386 --no-install-recommends; sudo apt-get clean
 enum linux_both = Platform(OS.linux, Model._both);
 
 /// OSes that require licenses must be setup manually
