@@ -270,10 +270,10 @@ do
 			DEPEND="glibc-devel($FARCH), gcc($FARCH), libcurl4($FARCH)"
 		fi
 		if test "$ARCH" = "x86_64" ; then
-			if test "$DNAME" = "fedora" ;then
-				DEPEND=$DEPEND", glibc-devel(x86-32), libgcc(x86-32), libcurl(x86-32)"
+			if test "$DNAME" = "fedora" ; then
+				SUGGESTS='glibc-devel(x86-32), libgcc(x86-32), libcurl(x86-32)'
 			elif test "$DNAME" = "openSUSE" ;then
-				DEPEND=$DEPEND", glibc-devel-32bit(x86-32), gcc-32bit($FARCH), libcurl4-32bit(x86-32)"
+				SUGGESTS="glibc-devel-32bit(x86-32), gcc-32bit($FARCH), libcurl4-32bit(x86-32)"
 			fi
 		fi
 
@@ -292,6 +292,7 @@ do
 
 		ExclusiveArch: '$ARCH'
 		Requires: '$DEPEND'
+		Suggests: '$SUGGESTS'
 		Provides: dmd = '$VERSION-$REVISION', dmd('$FARCH') = '$VERSION-$REVISION', '$SO_LIB.$SO_VERSION'
 
 		%global __requires_exclude ^libphobos2\\.so.*$
